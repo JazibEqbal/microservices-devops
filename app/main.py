@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+import urllib.request
+import json
 
 app = FastAPI()
 
@@ -10,7 +12,8 @@ def home():
 
 @app.get("/message")
 def get_message():
-    return {
-        "message": "This is a hardcoded backend response",
-        "status": "success"
-    }
+    response = urllib.request.urlopen(
+        "http://message-service:9000/message"
+    )
+
+    return json.loads(response.read())

@@ -1,0 +1,13 @@
+services:
+  api:
+    build:
+      context: .
+    container_name: devops-app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - message-service # Start message-service before starting api
+  message-service:
+    build:
+      context: ./message-service
+    container_name: message-svc
