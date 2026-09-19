@@ -6,8 +6,22 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - message-service # Start message-service before starting api
+      message-service: # Start message-service before starting api
+        condition: service_healthy
+
   message-service:
     build:
       context: ./message-service
     container_name: message-svc
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:9000/health')"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s

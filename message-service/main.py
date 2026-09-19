@@ -9,3 +9,10 @@ def get_message():
         "message": "Hello from Message Service",
         "service": "message-service"
     }
+
+
+@app.get("/health")
+def health():
+    return {
+        "status": "healthy"
+    }
