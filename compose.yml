@@ -12,7 +12,12 @@ services:
   message-service:
     build:
       context: ./message-service
+
     container_name: message-svc
+
+    volumes:
+      - message-data:/data
+
     healthcheck:
       test:
         [
@@ -25,3 +30,6 @@ services:
       timeout: 5s
       retries: 3
       start_period: 5s
+
+volumes:
+  message-data: # declaring named volume
