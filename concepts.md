@@ -4,6 +4,8 @@
  - start a container under a network: `docker run -d --name <container_name> --network <network_name> <image_name>`
  - exec inside a container: `docker exec -it <container_name> /bin/bash`
  - inspect a volume: `docker volume inspect <volume_name>`
+ - load a local image into Minikube: `minikube image load <image-name>`
+ - start minikube as docker `minikube start --driver=docker`
 
 ### Notes:
  - docker compose down: removes the underlying containers, networks but not the images. It automatically creates the 
