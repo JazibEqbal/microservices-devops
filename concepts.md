@@ -5,7 +5,8 @@
  - exec inside a container: `docker exec -it <container_name> /bin/bash`
  - inspect a volume: `docker volume inspect <volume_name>`
  - load a local image into Minikube: `minikube image load <image-name>`
- - start minikube as docker `minikube start --driver=docker`
+ - start Minikube as docker: `minikube start --driver=docker`
+ - exec inside a pod: `kubectl exec -it <pod_name> -- /bin/bash`
 
 ### Notes:
  - docker compose down: removes the underlying containers, networks but not the images. It automatically creates the 
