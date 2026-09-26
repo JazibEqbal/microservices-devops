@@ -8,6 +8,8 @@
  - start Minikube as docker: `minikube start --driver=docker`
  - exec inside a pod: `kubectl exec -it <pod_name> -- /bin/bash`
  - delete all resources within a folder: `kubectl delete -f <folder_path>`
+ - get detailed information of a pod: `kubectl describe pod <pod_name>`
+ - check config map & secrets assigned to a pod: `kubectl exec <pod_name> -- printenv <VAR_NAME>`
 
 ### Notes:
  - docker compose down: removes the underlying containers, networks but not the images. It automatically creates the 
