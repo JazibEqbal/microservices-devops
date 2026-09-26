@@ -33,3 +33,15 @@ spec:
             httpGet:
               path: /health
               port: 9000
+
+          volumeMounts:
+            - name: message-data
+              mountPath: /data
+
+#      volumes:
+#        - name: message-data
+#          emptyDir: {}
+      volumes:
+        - name: message-data
+          persistentVolumeClaim:
+            claimName: message-data-pvc
