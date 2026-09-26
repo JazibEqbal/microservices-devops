@@ -10,6 +10,9 @@
  - delete all resources within a folder: `kubectl delete -f <folder_path>`
  - get detailed information of a pod: `kubectl describe pod <pod_name>`
  - check config map & secrets assigned to a pod: `kubectl exec <pod_name> -- printenv <VAR_NAME>`
+ - get endpoints: `kubectl get endpoints <app_name>`
+ - manual scale a deployment via cli: `kubectl scale deployment <app_name> --replicas=3`
+ - Check Metrics Server: `kubectl get pods -n kube-system`
 
 ### Notes:
  - docker compose down: removes the underlying containers, networks but not the images. It automatically creates the 
