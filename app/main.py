@@ -13,7 +13,10 @@ MESSAGE_SERVICE_URL = os.getenv(
 
 @app.get("/")
 def home():
-    return {"message": "Hello from DevOps Learning Project"}
+    return {
+        "message": "Hello from DevOps Learning Project",
+        "version": "2.0"
+    }
 
 
 @app.get("/message")

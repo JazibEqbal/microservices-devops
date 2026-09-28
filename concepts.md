@@ -14,6 +14,11 @@
  - manual scale a deployment via cli: `kubectl scale deployment <app_name> --replicas=3`
  - Check Metrics Server: `kubectl get pods -n kube-system`
  - Enable Ingress in Minikube: `minikube addons enable ingress`
+ - Rollout deployment status: `kubectl rollout status deployment/<deployment_name>`
+ - Rollout deployment history: `kubectl rollout history deployment/<deployment_name>`
+ - Inspect a rollout: `kubectl rollout history deployment/<deployment_name>  --revision=<revision_number>`
+ - Rollback to previous version: `kubectl rollout undo deployment/<deployment_name>`
+ - Rollback to a particular version:`kubectl rollout undo deployment <deployment-name> --to-revision=<revision-number>`
 
 ### Notes:
  - docker compose down: removes the underlying containers, networks but not the images. It automatically creates the 
