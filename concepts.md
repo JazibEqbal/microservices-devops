@@ -29,3 +29,8 @@ default networking which can be identified with name *_default.
  - The Ingress is essentially an HTTP routing layer.
  - A Service provides stable access inside the Kubernetes cluster and can also expose workloads externally depending on its type.
    While ingress provides HTTP/HTTPS routing to Services.
+ - A Role defines what actions are allowed inside a namespace.
+ - Role binding is used to connect the Role to the ServiceAccount.
+ - ServiceAccount: WHO is making the request?
+ - Role: WHAT can they do?
+ - RoleBinding: WHO gets those permissions?

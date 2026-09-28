@@ -18,6 +18,7 @@ spec:
         app: api
 
     spec:
+#      serviceAccountName: api-service-account
       containers:
         - name: api-container
           image: devops-app:3.0
