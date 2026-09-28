@@ -3,6 +3,7 @@ kind: Deployment
 
 metadata:
   name: message-service-deployment
+  namespace: devops
 
 spec:
   replicas: 1

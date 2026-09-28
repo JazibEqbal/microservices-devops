@@ -19,6 +19,7 @@
  - Inspect a rollout: `kubectl rollout history deployment/<deployment_name>  --revision=<revision_number>`
  - Rollback to previous version: `kubectl rollout undo deployment/<deployment_name>`
  - Rollback to a particular version:`kubectl rollout undo deployment <deployment-name> --to-revision=<revision-number>`
+ - Get pods under a namespace: `kubectl get pods -n <namespace_name>`
 
 ### Notes:
  - docker compose down: removes the underlying containers, networks but not the images. It automatically creates the 

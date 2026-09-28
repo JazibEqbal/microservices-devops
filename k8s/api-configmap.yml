@@ -3,6 +3,7 @@ kind: ConfigMap
 
 metadata:
   name: api-config-map
+  namespace: devops
 
 data:
   MESSAGE_SERVICE_URL: "http://message-service-svc:9000"

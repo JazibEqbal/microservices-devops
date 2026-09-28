@@ -3,6 +3,7 @@ kind: Service
 
 metadata:
   name: message-service-svc
+  namespace: devops
 
 spec:
   selector:

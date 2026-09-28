@@ -3,6 +3,7 @@ kind: HorizontalPodAutoscaler
 
 metadata:
   name: api-hpa
+  namespace: devops
 
 spec:
   scaleTargetRef:

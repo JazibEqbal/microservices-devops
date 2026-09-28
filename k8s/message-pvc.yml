@@ -3,6 +3,7 @@ kind: PersistentVolumeClaim
 
 metadata:
   name: message-data-pvc
+  namespace: devops
 
 spec:
   accessModes:
