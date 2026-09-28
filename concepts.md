@@ -13,8 +13,13 @@
  - get endpoints: `kubectl get endpoints <app_name>`
  - manual scale a deployment via cli: `kubectl scale deployment <app_name> --replicas=3`
  - Check Metrics Server: `kubectl get pods -n kube-system`
+ - Enable Ingress in Minikube: `minikube addons enable ingress`
 
 ### Notes:
  - docker compose down: removes the underlying containers, networks but not the images. It automatically creates the 
 default networking which can be identified with name *_default.
  - emptyDir ≠ persistent storage, emptyDir belongs to Pod hence pod deleted emptyDir deleted.
+ - Ingress is a traffic router that receives external HTTP/HTTPS requests and sends them to the correct Kubernetes Service i.e., it acts as the common entry point.
+ - The Ingress is essentially an HTTP routing layer.
+ - A Service provides stable access inside the Kubernetes cluster and can also expose workloads externally depending on its type.
+   While ingress provides HTTP/HTTPS routing to Services.
