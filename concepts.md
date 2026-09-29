@@ -370,3 +370,96 @@ For persistent application data, use Kubernetes storage mechanisms such as:
 | **RoleBinding**    | Assigns Role permissions to a subject           |
 | **Metrics Server** | Provides resource metrics such as CPU/memory    |
 | **HPA**            | Automatically scales workloads based on metrics |
+
+
+# ☸️ Kubernetes Common Errors
+
+| Error / Symptom              | Root Cause                                 | Fix / Check                                       |
+| ---------------------------- | ------------------------------------------ | ------------------------------------------------- |
+| `ImagePullBackOff`           | Wrong image/tag or registry issue          | Check image name, tag, registry credentials       |
+| `ErrImagePull`               | Image cannot be pulled                     | Verify image, registry access, `imagePullSecrets` |
+| `CrashLoopBackOff`           | Container repeatedly crashes               | Check `kubectl logs <pod> --previous`             |
+| `CreateContainerConfigError` | Missing ConfigMap/Secret/key               | Check Pod references and ConfigMap/Secret         |
+| `Pending` Pod                | Insufficient resources or scheduling issue | `kubectl describe pod` → check Events             |
+| `Insufficient cpu/memory`    | Node lacks requested resources             | Reduce requests or add/scale nodes                |
+| `ContainerCreating` stuck    | Volume, network, image, or secret issue    | `kubectl describe pod` → check Events             |
+| `FailedMount`                | PVC/PV/storage problem                     | Check PVC, PV and StorageClass                    |
+| `PVC Pending`                | No matching PV / StorageClass issue        | Check `kubectl get pvc,pv,sc`                     |
+| Service has no endpoints     | Selector doesn't match Pod labels          | Compare Service selector with Pod labels          |
+| `Connection refused`         | App not listening on expected port         | Check app port and Service `targetPort`           |
+| Service not reachable        | Wrong selector/port/network policy         | Check Service → Endpoints → Pod                   |
+| Ingress `502/503`            | Backend Service/Pod unavailable            | Check Ingress → Service → Endpoints               |
+| Readiness probe failed       | App not ready or wrong probe config        | Check probe path, port and app                    |
+| Liveness probe failed        | App unhealthy or probe too aggressive      | Check logs and probe configuration                |
+| `OOMKilled`                  | Container exceeded memory limit            | Increase memory limit or fix memory usage         |
+| `Exit Code 1`                | Application/process error                  | Check `kubectl logs <pod>`                        |
+| `Forbidden`                  | RBAC permission denied                     | Check ServiceAccount, Role and RoleBinding        |
+| DNS failure                  | CoreDNS or wrong Service name              | Check CoreDNS and Service DNS name                |
+| `NodeNotReady`               | Kubelet/runtime/node issue                 | `kubectl describe node <node>`                    |
+| Deployment rollout stuck     | New Pods not becoming Ready                | Check Deployment, Pods and Events                 |
+| HPA not scaling              | Metrics unavailable / requests missing     | Check Metrics Server and HPA                      |
+| Pod stuck `Terminating`      | Finalizer, volume, or node issue           | Check finalizers and node status                  |
+
+## Debugging Flow
+
+### Pod Issue
+
+`get pods` → `describe pod` → `logs` → `logs --previous`
+
+### Service Issue
+
+`Service` → `Selector` → `Endpoints` → `Pod labels` → `targetPort`
+
+### Ingress Issue
+
+`Ingress` → `Service` → `Endpoints` → `Pod` → `Readiness`
+
+### Scheduling Issue
+
+`Pod Events` → `Resources` → `Taints/Tolerations` → `Affinity`
+
+### Storage Issue
+
+`Pod` → `PVC` → `PV` → `StorageClass`
+
+## Must Know Commands
+
+```bash
+kubectl get pods
+kubectl describe pod <pod>
+kubectl logs <pod>
+kubectl logs <pod> --previous
+kubectl get svc,endpoints
+kubectl get pvc,pv,sc
+kubectl get events --sort-by=.lastTimestamp
+kubectl describe node <node>
+kubectl rollout status deployment/<name>
+kubectl get hpa
+```
+
+# ☸️ Kubernetes Troubleshooting
+
+|  # | Interview Question                                              | One-Line Answer                                                                                                  |
+| -: | --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+|  1 | **Pod is stuck in `Pending`. What do you check?**               | Check `kubectl describe pod` Events for resources, taints, affinity, nodeSelector, or PVC issues.                |
+|  2 | **Pod is in `CrashLoopBackOff`. What do you do?**               | Check `kubectl logs <pod> --previous` and inspect the container's command, environment, and application error.   |
+|  3 | **Pod shows `ImagePullBackOff`. What could be wrong?**          | Verify image name/tag, registry access, and `imagePullSecrets`.                                                  |
+|  4 | **Pod is `Running` but application is not accessible. Why?**    | Check Service selector, Endpoints, `targetPort`, container port, and whether the app is listening correctly.     |
+|  5 | **Service has no Endpoints. What is the likely cause?**         | The Service selector does not match the labels on the target Pods, or Pods aren't Ready.                         |
+|  6 | **Service returns `Connection refused`. What do you check?**    | Verify that the application is listening on the expected port and that Service `targetPort` matches it.          |
+|  7 | **Ingress returns `502/503`. How do you troubleshoot?**         | Trace `Ingress → Service → Endpoints → Pod` and verify backend port and readiness.                               |
+|  8 | **Container is getting `OOMKilled`. Why?**                      | The container exceeded its memory limit; check memory usage and resource limits/requests.                        |
+|  9 | **Readiness probe keeps failing. What does it mean?**           | Kubernetes considers the application not ready; verify the probe path, port, timing, and application health.     |
+| 10 | **Liveness probe keeps failing. What happens?**                 | Kubernetes restarts the container; check application health and whether the probe is too aggressive.             |
+| 11 | **PVC is stuck in `Pending`. What do you check?**               | Check available PVs, StorageClass, access mode, capacity, and storage provisioner.                               |
+| 12 | **Pod shows `FailedMount`. What could cause it?**               | Check PVC/PV binding, StorageClass, volume configuration, and mount permissions.                                 |
+| 13 | **Pod is scheduled on no node. How do you debug it?**           | Check Pod Events, CPU/memory requests, taints/tolerations, nodeSelector, and affinity rules.                     |
+| 14 | **A Pod cannot resolve a Service name. What do you check?**     | Test DNS from inside the Pod and check CoreDNS plus the Service name/namespace.                                  |
+| 15 | **Pod cannot communicate with another Pod. What do you check?** | Verify Pod IPs, Services, ports, NetworkPolicies, and whether both applications are listening.                   |
+| 16 | **`kubectl` returns `Forbidden`. What is the issue?**           | The current user or ServiceAccount lacks the required RBAC permission.                                           |
+| 17 | **Deployment rollout is stuck. How do you investigate?**        | Run `kubectl rollout status` and inspect the new ReplicaSet, Pods, Events, and readiness failures.               |
+| 18 | **HPA is not scaling Pods. What do you check?**                 | Check Metrics Server, HPA status, resource requests, and target utilization.                                     |
+| 19 | **Pod is stuck in `Terminating`. What could be wrong?**         | Check finalizers, volume detach issues, node health, and whether graceful termination is blocked.                |
+| 20 | **Node shows `NotReady`. What do you check first?**             | Run `kubectl describe node` and investigate kubelet, container runtime, networking, disk, and memory conditions. |
+
+---
