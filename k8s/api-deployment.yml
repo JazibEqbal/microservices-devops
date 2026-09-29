@@ -21,7 +21,7 @@ spec:
 #      serviceAccountName: api-service-account
       containers:
         - name: api-container
-          image: devops-app:3.0
+          image: devops-app:4.0
 
           ports:
             - containerPort: 8000

@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: food-service-deployment
+  namespace: devops
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: food-service
+
+  template:
+    metadata:
+      labels:
+        app: food-service
+
+    spec:
+      containers:
+        - name: food-service-container
+          image: food-service:1.0
+          ports:
+            - containerPort: 9100
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 9100
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 9100

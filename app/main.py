@@ -26,3 +26,12 @@ def get_message():
     )
 
     return json.loads(response.read())
+
+
+@app.get("/food")
+def get_food():
+    response = urllib.request.urlopen(
+        f"http://food-service-svc:9100/food"
+    )
+
+    return json.loads(response.read())
