@@ -13,6 +13,9 @@ permissions:
   contents: read
   packages: write
 
+env:
+  IMAGE_NAME: ghcr.io/${{ github.repository }}
+
 jobs:
   setup:
     runs-on: ubuntu-latest
@@ -38,10 +41,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build APP Image
-        run: docker build -t devops-app:1.0 .
+        run: docker build -t ${{ env.IMAGE_NAME }}/devops-app:${{ github.sha }} .
 
       - name: Build Message Service Image
-        run: docker build -t message-service:1.0 ./message-service/
+        run: docker build -t ${{ env.IMAGE_NAME }}/message-service:${{ github.sha }} ./message-service/
 
       - name: Build Food Service Image
-        run: docker build -t food-service:1.0 ./food-service/
+        run: docker build -t ${{ env.IMAGE_NAME }}/food-service:${{ github.sha }} ./food-service/
