@@ -53,3 +53,16 @@ jobs:
       - name: Build Food Service Image
         run: |
           docker build -t "$IMAGE_NAME/food-service:${{ github.sha }}" ./food-service/
+          
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Docker Images
+        run: |
+          docker push "$IMAGE_NAME/devops-app:${{ github.sha }}"
+          docker push "$IMAGE_NAME/message-service:${{ github.sha }}"
+          docker push "$IMAGE_NAME/food-service:${{ github.sha }}"
