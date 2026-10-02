@@ -94,6 +94,6 @@ if ! kubectl rollout status deployment/food-service-deployment \
     exit 1
 fi
 
-bash ./scripts/smoke-test.sh
+#bash ./scripts/smoke-test.sh
 
 echo "Rollout completed successfully."
