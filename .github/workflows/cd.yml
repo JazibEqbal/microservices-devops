@@ -19,4 +19,4 @@ jobs:
         run: |
           chmod +x scripts/deploy.sh
           chmod +x scripts/smoke-test.sh
-          ./scripts/deploy.sh ${{ github.sha }}
+          ./scripts/deploy.sh 4d1b17b92d661b26cd823b4f98e0d4f09fa2bbf6
