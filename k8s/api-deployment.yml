@@ -19,9 +19,14 @@ spec:
 
     spec:
 #      serviceAccountName: api-service-account
+
+      imagePullSecrets:
+        - name: ghcr-secret
+
       containers:
         - name: api-container
-          image: devops-app:4.0
+#          image: devops-app:4.0
+          image: ghcr.io/jazibeqbal/microservices-devops/devops-app:4d1b17b92d661b26cd823b4f98e0d4f09fa2bbf6
 
           ports:
             - containerPort: 8000

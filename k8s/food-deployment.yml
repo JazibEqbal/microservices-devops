@@ -18,9 +18,13 @@ spec:
         app: food-service
 
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+
       containers:
         - name: food-service-container
-          image: food-service:1.0
+#          image: food-service:1.0
+          image: ghcr.io/jazibeqbal/microservices-devops/food-service:4d1b17b92d661b26cd823b4f98e0d4f09fa2bbf6
           ports:
             - containerPort: 9100
 

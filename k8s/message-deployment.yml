@@ -19,9 +19,13 @@ spec:
         app: message-service
 
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+
       containers:
         - name: message-service-container
-          image: message-service:1.0
+#          image: message-service:1.0
+          image: ghcr.io/jazibeqbal/microservices-devops/message-service:4d1b17b92d661b26cd823b4f98e0d4f09fa2bbf6
           ports:
             - containerPort: 9000
 
