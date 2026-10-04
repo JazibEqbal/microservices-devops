@@ -18,5 +18,14 @@ jobs:
       - name: Deploy application
         run: |
           chmod +x scripts/deploy.sh
+          ./scripts/deploy.sh ${{ github.event.workflow_run.head_sha }}
+
+      - name: Get API URL
+        run: |
+          API_URL=$(minikube service api-svc -n devops --url)
+          echo "API_URL=$API_URL" >> "$GITHUB_ENV"
+
+      - name: Run smoke tests
+        run: |
           chmod +x scripts/smoke-test.sh
-          ./scripts/deploy.sh 4d1b17b92d661b26cd823b4f98e0d4f09fa2bbf6
+          ./scripts/smoke-test.sh

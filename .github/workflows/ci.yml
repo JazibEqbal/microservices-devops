@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - dev
+      - main
 
 #  pull_request:
 #    branches:
@@ -66,3 +66,11 @@ jobs:
           docker push "$IMAGE_NAME/devops-app:${{ github.sha }}"
           docker push "$IMAGE_NAME/message-service:${{ github.sha }}"
           docker push "$IMAGE_NAME/food-service:${{ github.sha }}"
+
+      - name: CI Summary
+        run: |
+          echo "CI completed successfully"
+          echo "Commit SHA: ${{ github.sha }}"
+          echo "API image: ghcr.io/${{ github.repository }}/devops-app:${{ github.sha }}"
+          echo "Message image: ghcr.io/${{ github.repository }}/message-service:${{ github.sha }}"
+          echo "Food image: ghcr.io/${{ github.repository }}/food-service:${{ github.sha }}"

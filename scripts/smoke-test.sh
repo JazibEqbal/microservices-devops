@@ -4,8 +4,6 @@ set -e
 
 if [ -z "$API_URL" ]; then
     echo "API_URL is not set."
-    echo "Example:"
-    echo "API_URL=http://localhost:8000 ./scripts/smoke-test.sh"
     exit 1
 fi
 
