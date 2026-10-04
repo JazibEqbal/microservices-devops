@@ -1,15 +1,49 @@
 name: CD
 
 on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+
   workflow_dispatch:
+    inputs:
+      commit_hash:
+        description: "Commit SHA to deploy. If empty, current HEAD will be used"
+        required: false
+        default: ""
 
 jobs:
   deploy:
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+
     runs-on: self-hosted
 
     steps:
+      - name: Resolve commit hash
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_run" ]; then
+            COMMIT_HASH="${{ github.event.workflow_run.head_sha }}"
+          elif [ -n "${{ inputs.commit_hash }}" ]; then
+            COMMIT_HASH="${{ inputs.commit_hash }}"
+          else
+            COMMIT_HASH="${{ github.sha }}"
+          fi
+
+          echo "COMMIT_HASH=$COMMIT_HASH" >> "$GITHUB_ENV"
+          echo "Deploying commit: $COMMIT_HASH"
+
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.COMMIT_HASH }}
+
+      - name: Start Minikube
+        run: |
+          minikube start
 
       - name: Check Kubernetes
         run: |
@@ -18,12 +52,13 @@ jobs:
       - name: Deploy application
         run: |
           chmod +x scripts/deploy.sh
-          ./scripts/deploy.sh ${{ github.event.workflow_run.head_sha }}
+          ./scripts/deploy.sh "$COMMIT_HASH"
 
       - name: Get API URL
         run: |
           API_URL=$(minikube service api-svc -n devops --url)
           echo "API_URL=$API_URL" >> "$GITHUB_ENV"
+          echo "API URL: $API_URL"
 
       - name: Run smoke tests
         run: |
