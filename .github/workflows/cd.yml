@@ -27,14 +27,12 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "workflow_run" ]; then
             COMMIT_HASH="${{ github.event.workflow_run.head_sha }}"
-          elif [ -n "${{ inputs.commit_hash }}" ]; then
-            COMMIT_HASH="${{ inputs.commit_hash }}"
           else
-            COMMIT_HASH="${{ github.sha }}"
+            COMMIT_HASH="${{ inputs.commit_hash }}"
           fi
 
           echo "COMMIT_HASH=$COMMIT_HASH" >> "$GITHUB_ENV"
-          echo "Deploying commit: $COMMIT_HASH"
+          echo "Deploying to commit: $COMMIT_HASH"
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -48,6 +46,22 @@ jobs:
       - name: Check Kubernetes
         run: |
           kubectl get nodes
+
+      - name: Enable Ingress
+        run: minikube addons enable ingress
+
+      - name: Validate Ingress
+        run: |
+          kubectl get pods -n ingress-nginx
+      
+          kubectl wait \
+            --namespace ingress-nginx \
+            --for=condition=ready pod \
+            --selector=app.kubernetes.io/component=controller \
+            --timeout=180s
+      
+          kubectl get pods -n ingress-nginx
+          kubectl get svc -n ingress-nginx
 
       - name: Deploy application
         run: |
