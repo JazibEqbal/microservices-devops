@@ -70,11 +70,11 @@ jobs:
 
       - name: Get API URL
         run: |
-          API_URL=$(minikube service api-svc -n devops --url)
+          API_URL="http://api.local"
           echo "API_URL=$API_URL" >> "$GITHUB_ENV"
           echo "API URL: $API_URL"
 
       - name: Run smoke tests
         run: |
           chmod +x scripts/smoke-test.sh
-          ./scripts/smoke-test.sh
+          ./scripts/smoke-test.sh "$API_URL"

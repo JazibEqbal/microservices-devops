@@ -2,21 +2,23 @@
 
 set -e
 
-if [ -z "$API_URL" ]; then
-    echo "API_URL is not set."
-    exit 1
-fi
+API_URL="${1:-http://api.local}"
 
-echo "Testing API..."
-curl --fail "$API_URL/"
+echo "Running smoke test against: $API_URL"
 
-echo
-echo "Testing Message Service through API..."
-curl --fail "$API_URL/message"
+echo "Checking API..."
+curl --fail --silent --show-error \
+    "$API_URL/"
 
 echo
-echo "Testing Food Service through API..."
-curl --fail "$API_URL/food"
+echo "Checking API -> Message Service..."
+curl --fail --silent --show-error \
+    "$API_URL/message"
 
 echo
-echo "All smoke tests passed."
+echo "Checking API -> Food Service..."
+curl --fail --silent --show-error \
+    "$API_URL/food"
+
+echo
+echo "Smoke test passed."
