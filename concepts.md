@@ -399,6 +399,7 @@ For persistent application data, use Kubernetes storage mechanisms such as:
 | Deployment rollout stuck     | New Pods not becoming Ready                | Check Deployment, Pods and Events                 |
 | HPA not scaling              | Metrics unavailable / requests missing     | Check Metrics Server and HPA                      |
 | Pod stuck `Terminating`      | Finalizer, volume, or node issue           | Check finalizers and node status                  |
+| app stuck in a restart loop  | app takes more time to start  | increase/add startupfailure threhold timing of startup probe   |
 
 ## Debugging Flow
 
@@ -463,3 +464,19 @@ kubectl get hpa
 | 20 | **Node shows `NotReady`. What do you check first?**             | Run `kubectl describe node` and investigate kubelet, container runtime, networking, disk, and memory conditions. |
 
 ---
+
+### The 3 Quality of Service (QoS) classes:
+1. Guaranteed: Every container has CPU and memory i.e, `request == limit`
+2. Burstable: Requests/limits are present, but they're different i.e, `request < limit`
+3. BestEffort: No requests or limits or simply no resources section i.e, `resources: {}`
+
+### Pod Placements:
+|  #                | Meaning                  |
+| ----------------  | ----------------         |
+| Pod Affinity      | Place pod together       |
+| Pod Anti-Affinity | Place pod apart/seperate |
+
+Both pod affinity and anti affinity can be of preferred (try)/required (must) type.
+
+Investigate the communication between api pod and message service. can it be improved like architecture of ingress/network policy or current architecture is fine.
+
